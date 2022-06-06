@@ -63,8 +63,8 @@
 // window size/position.
 macro_rules! assert_main_thread {
     ($($t:tt)*) => {
-        let is_main_thread: ::objc::runtime::BOOL = msg_send!(class!(NSThread), isMainThread);
-        if is_main_thread == ::objc::runtime::NO {
+        let is_main_thread = msg_send_bool![class!(NSThread), isMainThread];
+        if !is_main_thread {
             panic!($($t)*);
         }
     };

@@ -13,10 +13,11 @@ use std::{
 
 use cocoa::{
     appkit::{NSApp, NSEventModifierFlags, NSEventSubtype, NSEventType::NSApplicationDefined},
-    base::{id, nil, BOOL, NO, YES},
+    base::{id, nil},
     foundation::{NSInteger, NSPoint, NSTimeInterval},
 };
 use objc::rc::autoreleasepool;
+use objc::runtime::Bool;
 use raw_window_handle::{AppKitDisplayHandle, RawDisplayHandle};
 
 use crate::{
@@ -144,8 +145,8 @@ impl Default for PlatformSpecificEventLoopAttributes {
 impl<T> EventLoop<T> {
     pub(crate) fn new(attributes: &PlatformSpecificEventLoopAttributes) -> Self {
         let delegate = unsafe {
-            let is_main_thread: BOOL = msg_send!(class!(NSThread), isMainThread);
-            if is_main_thread == NO {
+            let is_main_thread = msg_send_bool![class!(NSThread), isMainThread];
+            if !is_main_thread {
                 panic!("On macOS, `EventLoop` must be created on the main thread!");
             }
 
@@ -252,7 +253,7 @@ pub unsafe fn post_dummy_event(target: id) {
         data1: 0 as NSInteger
         data2: 0 as NSInteger
     ];
-    let _: () = msg_send![target, postEvent: dummy_event atStart: YES];
+    let _: () = msg_send![target, postEvent: dummy_event atStart: Bool::YES];
 }
 
 /// Catches panics that happen inside `f` and when a panic
