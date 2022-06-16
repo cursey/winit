@@ -303,11 +303,11 @@ impl MonitorHandle {
             let uuid = ffi::CGDisplayCreateUUIDFromDisplayID(self.0);
             let screens = NSScreen::screens(nil);
             let count: NSUInteger = msg_send![screens, count];
-            let key = util::ns_string_id_ref("NSScreenNumber");
+            let key = util::ns_string("NSScreenNumber");
             for i in 0..count {
                 let screen = msg_send![screens, objectAtIndex: i as NSUInteger];
                 let device_description = NSScreen::deviceDescription(screen);
-                let value: id = msg_send![device_description, objectForKey:*key];
+                let value: id = msg_send![device_description, objectForKey: &*key];
                 if value != nil {
                     let other_native_id: NSUInteger = msg_send![value, unsignedIntegerValue];
                     let other_uuid =

@@ -13,6 +13,7 @@ use cocoa::{
 };
 use core_graphics::display::CGDisplay;
 use objc::ffi::NSUInteger;
+use objc::rc::{Id, Shared};
 use objc::runtime::{Class, Object};
 
 use crate::dpi::LogicalPosition;
@@ -127,16 +128,16 @@ pub fn window_position(position: LogicalPosition<f64>) -> NSPoint {
     )
 }
 
-pub unsafe fn ns_string_id_ref(s: &str) -> IdRef {
-    IdRef::new(NSString::alloc(nil).init_str(s))
+pub unsafe fn ns_string(s: &str) -> Id<Object, Shared> {
+    Id::new(NSString::alloc(nil).init_str(s)).unwrap()
 }
 
 #[allow(dead_code)] // In case we want to use this function in the future
 pub unsafe fn app_name() -> Option<id> {
     let bundle: id = msg_send![class!(NSBundle), mainBundle];
     let dict: id = msg_send![bundle, infoDictionary];
-    let key = ns_string_id_ref("CFBundleName");
-    let app_name: id = msg_send![dict, objectForKey:*key];
+    let key = ns_string("CFBundleName");
+    let app_name: id = msg_send![dict, objectForKey: &*key];
     if app_name != nil {
         Some(app_name)
     } else {

@@ -531,7 +531,7 @@ extern "C" fn unmark_text(this: &Object, _sel: Sel) {
         let s: id = msg_send![class!(NSString), new];
         let _: () = msg_send![mutable_string, setString: s];
         let _: () = msg_send![s, release];
-        let input_context: id = msg_send![this, inputContext];
+        let input_context: &Object = msg_send![this, inputContext];
         let _: () = msg_send![input_context, discardMarkedText];
 
         let state_ptr: *mut c_void = *this.ivar("winitState");

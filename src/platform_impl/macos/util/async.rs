@@ -6,17 +6,17 @@ use std::{
 use cocoa::{
     appkit::{CGFloat, NSScreen, NSWindow, NSWindowStyleMask},
     base::{id, nil},
-    foundation::{NSPoint, NSSize, NSString},
+    foundation::{NSPoint, NSSize},
 };
 use dispatch::Queue;
-use objc::rc::autoreleasepool;
+use objc::rc::{autoreleasepool, Id};
 use objc::runtime::Bool;
 
 use crate::{
     dpi::LogicalSize,
     platform_impl::platform::{
         ffi,
-        util::IdRef,
+        util::{self, IdRef},
         window::{SharedState, SharedStateMutexGuard},
     },
 };
@@ -216,8 +216,8 @@ pub unsafe fn make_key_and_order_front_async(ns_window: id) {
 pub unsafe fn set_title_async(ns_window: id, title: String) {
     let ns_window = MainThreadSafe(ns_window);
     Queue::main().exec_async(move || {
-        let title = IdRef::new(NSString::alloc(nil).init_str(&title));
-        ns_window.setTitle_(*title);
+        let title = util::ns_string(&title);
+        ns_window.setTitle_(Id::as_ptr(&title) as id);
     });
 }
 

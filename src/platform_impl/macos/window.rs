@@ -48,7 +48,7 @@ use core_graphics::display::{CGDisplay, CGDisplayMode};
 use objc::{
     declare::ClassBuilder,
     ffi::NSUInteger,
-    rc::autoreleasepool,
+    rc::{autoreleasepool, Id},
     runtime::{Bool, Class, Object, Sel},
 };
 use once_cell::sync::Lazy;
@@ -213,9 +213,9 @@ fn create_window(
         ));
 
         ns_window.non_nil().map(|ns_window| {
-            let title = util::ns_string_id_ref(&attrs.title);
+            let title = util::ns_string(&attrs.title);
             ns_window.setReleasedWhenClosed_(Bool::NO.as_raw());
-            ns_window.setTitle_(*title);
+            ns_window.setTitle_(Id::as_ptr(&title) as id);
             ns_window.setAcceptsMouseMovedEvents_(Bool::YES.as_raw());
 
             if pl_attrs.titlebar_transparent {
@@ -1111,8 +1111,8 @@ impl UnownedWindow {
         unsafe {
             let screen: id = msg_send![*self.ns_window, screen];
             let desc = NSScreen::deviceDescription(screen);
-            let key = util::ns_string_id_ref("NSScreenNumber");
-            let value = NSDictionary::valueForKey_(desc, *key);
+            let key = util::ns_string("NSScreenNumber");
+            let value = NSDictionary::valueForKey_(desc, Id::as_ptr(&key) as id);
             let display_id: NSUInteger = msg_send![value, unsignedIntegerValue];
             RootMonitorHandle {
                 inner: MonitorHandle::new(display_id.try_into().unwrap()),
