@@ -7,10 +7,10 @@ use std::{
 use cocoa::{
     appkit::{self, NSApplicationPresentationOptions, NSView, NSWindow, NSWindowOcclusionState},
     base::{id, nil},
-    foundation::NSUInteger,
 };
 use objc::{
     declare::ClassBuilder,
+    ffi::NSUInteger,
     rc::autoreleasepool,
     runtime::{Bool, Class, Object, Sel},
 };

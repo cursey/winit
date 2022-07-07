@@ -14,8 +14,9 @@ use std::{
 use cocoa::{
     appkit::{NSApp, NSEventModifierFlags, NSEventSubtype, NSEventType::NSApplicationDefined},
     base::{id, nil},
-    foundation::{NSInteger, NSPoint, NSTimeInterval},
+    foundation::{NSPoint, NSTimeInterval},
 };
+use objc::ffi::NSInteger;
 use objc::rc::autoreleasepool;
 use objc::runtime::Bool;
 use raw_window_handle::{AppKitDisplayHandle, RawDisplayHandle};

@@ -12,10 +12,11 @@ use std::{
 use cocoa::{
     appkit::{NSApp, NSEvent, NSEventModifierFlags, NSEventPhase, NSView, NSWindow},
     base::{id, nil},
-    foundation::{NSInteger, NSPoint, NSRange, NSRect, NSSize, NSString, NSUInteger},
+    foundation::{NSPoint, NSRange, NSRect, NSSize, NSString},
 };
 use objc::{
     declare::ClassBuilder,
+    ffi::{NSInteger, NSUInteger},
     runtime::{Bool, Class, Object, Protocol, Sel},
 };
 use once_cell::sync::Lazy;
