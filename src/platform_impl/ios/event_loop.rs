@@ -7,6 +7,7 @@ use std::{
     sync::mpsc::{self, Receiver, Sender},
 };
 
+use objc2::runtime::Object;
 use objc2::ClassType;
 use raw_window_handle::{RawDisplayHandle, UiKitDisplayHandle};
 
@@ -113,7 +114,7 @@ impl<T: 'static> EventLoop<T> {
         F: 'static + FnMut(Event<'_, T>, &RootEventLoopWindowTarget<T>, &mut ControlFlow),
     {
         unsafe {
-            let application: *mut c_void = msg_send![class!(UIApplication), sharedApplication];
+            let application: *mut Object = msg_send![class!(UIApplication), sharedApplication];
             assert_eq!(
                 application,
                 ptr::null_mut(),
