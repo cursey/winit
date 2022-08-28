@@ -188,12 +188,13 @@ impl<T: 'static> EventLoop<T> {
         let thread_id = unsafe { GetCurrentThreadId() };
 
         if !attributes.any_thread && thread_id != main_thread_id() {
-            panic!(
+            /*panic!(
                 "Initializing the event loop outside of the main thread is a significant \
                  cross-platform compatibility hazard. If you absolutely need to create an \
                  EventLoop on a different thread, you can use the \
                  `EventLoopBuilderExtWindows::any_thread` function."
-            );
+            );*/
+            ();
         }
 
         if attributes.dpi_aware {
